@@ -1,3 +1,0 @@
-[submodule "src/3rdparty/pixi.js"]
-	path = src/3rdparty/pixi.js
-	url = https://github.com/pixijs/pixi.js.git
