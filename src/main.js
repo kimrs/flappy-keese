@@ -15,14 +15,24 @@ function init() {
 
     const mask = new PIXI.Graphics();
     mask.lineStyle(0);
-    mask.moveTo(app.screen.width / 2, app.screen.height / 2);
-    app.stage.addChild(mask);
-    //container.mask = mask;
     
-    mask.beginFill(0xDE3249, 0.4);
+    mask.beginFill(0xDE3249, 0.6);
+    container.mask = mask;
 
-    mask.lineTo(50, 0);
-    mask.lineTo(50, 100);
-    mask.lineTo(0, 100);
+    mask.moveTo(app.screen.width / 2, app.screen.height / 2 + 120);
+    //mask.bezierCurveTo(300, 400, 500, 350, app.screen.width / 2,app.screen.height / 2);
+    const curve = new Bezier(   app.screen.width/2, app.screen.height/2 + 120, 
+                                300               , 400                      , 
+                                500               , 350                      , 
+                                app.screen.width/2, app.screen.height/2      );
+    const lut = curve.getLUT(16);
+    lut.forEach(e => {
+      mask.drawCircle(e.x, e.y, 4);  
+    });
+
     mask.endFill();
+    app.stage.addChild(mask);
+
+    
+    
 }
