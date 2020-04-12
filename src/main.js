@@ -6,33 +6,80 @@ function init() {
     const container = new PIXI.Container();
     container.x = app.screen.width / 2;
     container.y = app.screen.height / 2;
+
+    const cur = new Curve(app.screen.width/2, app.screen.height/2);
+    app.stage.addChild(cur.container);
+}
+
+class Curve {
+
+    constructor(x, y) {
+        this.nSteps = 6;
+        this.width = 30;
+        const cSource  = new PIXI.Point(x, y + 160);
+        const cTarget  = new PIXI.Point(x, y);
+        const cHandle1 = new PIXI.Point(380, 400);
+        const cHandle2 = new PIXI.Point(500, 350);
+
+        const curve = new Bezier(    cSource.x,  cSource.y, 
+                                    cHandle1.x, cHandle1.y,
+                                    cHandle2.x, cHandle2.y,
+                                     cTarget.x,  cTarget.y);
+        
+        const asphalt = PIXI.Sprite.from('res/asphalt.png');
+        asphalt.anchor.set(0.5);
+        asphalt.x = x;
+        asphalt.y = y;
+                                    
+        const container = new PIXI.Container();
+        container.addChild(asphalt);
+
+        const vertices = Curve.toVertices(curve, this.width, this.nSteps);
+        const mask = new PIXI.Graphics();
+        mask.lineStyle(1);
+        mask.beginFill(0xFF0000, 0.6);
+        mask.drawPolygon(vertices);
+        mask.endFill();
+        container.addChild(mask);
+        asphalt.mask = mask;
+
+        const dbgGraphics = new PIXI.Graphics();
+        dbgGraphics.lineStyle(1);
+        dbgGraphics.beginFill(0x99FF00, 0.6);
+        dbgGraphics.drawCircle(cHandle1.x, cHandle1.y, 10);
+        dbgGraphics.endFill();
+        dbgGraphics.beginFill(0xFF9900, 0.6);
+        dbgGraphics.drawCircle(cHandle2.x, cHandle2.y, 10);
+        dbgGraphics.endFill();
+        container.addChild(dbgGraphics);
+
+        this._container = container;
+    }
+
+    get dbgGraphics() { return this._dbgGraphics; }
+    get container() { return this._container; }
     
-    const asphalt = PIXI.Sprite.from('res/asphalt.png');
-    asphalt.anchor.set(0.5);
+    static toVertices(curve, d, steps) {
+        let vertices = [];
+        const step = 1/steps;
+        d = -d;
+        for(let t=0.0; t<=1.0; t+=step) {
+            const pt = curve.get(t);
+            const nv = curve.normal(t);
 
-    container.addChild(asphalt);
-    app.stage.addChild(container);
+            vertices.push(pt.x + d*nv.x);
+            vertices.push(pt.y + d*nv.y);
+        }
 
-    const mask = new PIXI.Graphics();
-    mask.lineStyle(0);
-    
-    mask.beginFill(0xDE3249, 0.6);
-    container.mask = mask;
+        d = -d;
+        for(let t=1; t>= 0; t-=step) {
+            const pt = curve.get(t);
+            const nv = curve.normal(t);
 
-    mask.moveTo(app.screen.width / 2, app.screen.height / 2 + 120);
-    //mask.bezierCurveTo(300, 400, 500, 350, app.screen.width / 2,app.screen.height / 2);
-    const curve = new Bezier(   app.screen.width/2, app.screen.height/2 + 120, 
-                                300               , 400                      , 
-                                500               , 350                      , 
-                                app.screen.width/2, app.screen.height/2      );
-    const lut = curve.getLUT(16);
-    lut.forEach(e => {
-      mask.drawCircle(e.x, e.y, 4);  
-    });
+            vertices.push(pt.x + d*nv.x);
+            vertices.push(pt.y + d*nv.y);
+        }
 
-    mask.endFill();
-    app.stage.addChild(mask);
-
-    
-    
+        return vertices;
+    }
 }
