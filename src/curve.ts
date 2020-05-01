@@ -1,38 +1,14 @@
+import * as PIXI from 'pixi.js';
+import Bezier from 'bezier-js';
 
-function init() {
-    const app = new PIXI.Application();
-    document.body.appendChild(app.view);
+export class Curve {
+    public transform: PIXI.Matrix;
+    private nSteps: number;
+    private width: number;
+    private _handle: PIXI.Point;
+    private _container: PIXI.Container;
 
-    const trackContainer = new PIXI.Container();
-    trackContainer.x = app.screen.width/2;
-    trackContainer.y = app.screen.height/2;
-
-    app.stage.addChild(trackContainer);
-
-    let transform = new PIXI.Matrix();
-    transform.translate(0, 1);
-    transform.scale(100, 100);
-    
-    const curve1 = new Curve(transform, Math.PI/2, new PIXI.Point(0, 0));
-    trackContainer.addChild(curve1.container);
-
-    const curve2 = new Curve(curve1.transform, Math.PI/8, curve1.handle);
-    trackContainer.addChild(curve2.container);
-
-    const curve3 = new Curve(curve2.transform, Math.PI/8, curve2.handle);
-    trackContainer.addChild(curve3.container);
-
-    const curve4 = new Curve(curve3.transform, Math.PI/8, curve3.handle);
-    trackContainer.addChild(curve4.container);
-}
-
-class TrackQueue {
-
-}
-
-class Curve {
-
-    constructor(transform, angle, handle) {
+    public constructor(transform: PIXI.Matrix, angle: number, handle: PIXI.Point) {
         this.nSteps = 6;
         this.width = 20;
 
@@ -73,7 +49,7 @@ class Curve {
 
     get container() { return this._container; }
 
-    static genBackground(curve)
+    static genBackground(curve: Bezier)
     {
         const bg = PIXI.Sprite.from('res/asphalt.png');
         bg.anchor.set(0.5);
@@ -83,7 +59,7 @@ class Curve {
         return bg;
     }
 
-    static genMask(curve, width, nSteps)
+    static genMask(curve: Bezier, width: number, nSteps:number)
     {
         const vertices = Curve.toVertices(curve, width, nSteps);
         const mask = new PIXI.Graphics();
@@ -95,7 +71,7 @@ class Curve {
         return mask;
     }
 
-    static genDbgGraphics(curve, width, nSteps) {
+    static genDbgGraphics(curve: Bezier, width: number, nSteps:number) {
         const dbgGraphics = new PIXI.Graphics();
         dbgGraphics.beginFill(0x00F9F9, 0.6);
         dbgGraphics.drawCircle(curve.points[1].x, curve.points[1].y, 10);
@@ -123,7 +99,7 @@ class Curve {
         return dbgGraphics;
     }
     
-    static toVertices(curve, d, steps) {
+    static toVertices(curve:Bezier, d:number, steps:number) {
         let vertices = [];
         const step = 1/steps;
         //d = -d;
