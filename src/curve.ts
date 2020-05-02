@@ -7,6 +7,7 @@ export class Curve {
     private width: number;
     private _handle: PIXI.Point;
     private _container: PIXI.Container;
+    private _curve: Bezier;
 
     public constructor(transform: PIXI.Matrix, angle: number, handle: PIXI.Point) {
         this.nSteps = 6;
@@ -26,7 +27,7 @@ export class Curve {
         const target  = transform.apply(new PIXI.Point(0, 0));
         const source = transform.apply(new PIXI.Point(0, -1));
 
-        const curve = new Bezier(   source.x,  source.y, 
+        this._curve = new Bezier(   source.x,  source.y, 
                                     srcHandle.x, srcHandle.y,
                                     trgHandle.x, trgHandle.y,
                                     target.x, target.y);
@@ -34,22 +35,31 @@ export class Curve {
         this.transform = transform;
         const container = new PIXI.Container();
 
-        const background = Curve.genBackground(curve);
+        const background = Curve.genBackground(this._curve);
         container.addChild(background);
 
-        const mask = Curve.genMask(curve, this.width, this.nSteps);
+        const mask = Curve.genMask(this._curve, this.width, this.nSteps);
         container.addChild(mask);
         background.mask = mask;
 
-        container.addChild(Curve.genDbgGraphics(curve, this.width, this.nSteps));
+        //container.addChild(Curve.genDbgGraphics(curve, this.width, this.nSteps));
 
         this._container = container;
     }
-    get handle() { return this._handle; }
 
-    get container() { return this._container; }
+    public point(at: number) { 
+        const dv = this._curve.derivative(at);
+        const rotation = Math.PI + Math.atan2(dv.y, dv.x);
+        const position = this._curve.get(at);
 
-    static genBackground(curve: Bezier)
+        return [position.x, position.y, rotation]; 
+    }
+
+    public get handle() { return this._handle; }
+
+    public get container() { return this._container; }
+
+    private static genBackground(curve: Bezier)
     {
         const bg = PIXI.Sprite.from('res/asphalt.png');
         bg.anchor.set(0.5);
@@ -59,7 +69,7 @@ export class Curve {
         return bg;
     }
 
-    static genMask(curve: Bezier, width: number, nSteps:number)
+    private static genMask(curve: Bezier, width: number, nSteps:number)
     {
         const vertices = Curve.toVertices(curve, width, nSteps);
         const mask = new PIXI.Graphics();
@@ -71,7 +81,7 @@ export class Curve {
         return mask;
     }
 
-    static genDbgGraphics(curve: Bezier, width: number, nSteps:number) {
+    private static genDbgGraphics(curve: Bezier, width: number, nSteps:number) {
         const dbgGraphics = new PIXI.Graphics();
         dbgGraphics.beginFill(0x00F9F9, 0.6);
         dbgGraphics.drawCircle(curve.points[1].x, curve.points[1].y, 10);
@@ -99,7 +109,7 @@ export class Curve {
         return dbgGraphics;
     }
     
-    static toVertices(curve:Bezier, d:number, steps:number) {
+    private static toVertices(curve:Bezier, d:number, steps:number) {
         let vertices = [];
         const step = 1/steps;
         //d = -d;
