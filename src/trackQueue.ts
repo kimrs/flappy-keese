@@ -18,7 +18,7 @@ export class TrackQueue {
         container.addChild(this._currentSegment.curve.container);
         this._container = container;
     }
-    
+
     public get current() { return this._currentSegment; }
 
     public toNext() {
@@ -27,7 +27,8 @@ export class TrackQueue {
     }
 
     public add() {
-        const next = new TrackSegment(Math.PI/8, this._head);
+        const angle = -Math.PI/4 + (Math.random() * Math.PI/2);
+        const next = new TrackSegment(angle, this._head);
         this._head.next = next;
         this._head = next;
         this._container.addChild(next.curve.container);

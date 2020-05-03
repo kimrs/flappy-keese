@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { Viewport } from 'pixi-viewport'
 import { Curve } from './curve';
 import { TrackQueue } from './trackQueue';
 
@@ -9,7 +10,15 @@ const trackContainer = new PIXI.Container();
 trackContainer.x = app.screen.width/2;
 trackContainer.y = app.screen.height/2;
 
-app.stage.addChild(trackContainer);
+const viewport = new Viewport( {
+    screenWidth: window.innerWidth, 
+    screenHeight: window.innerHeight, 
+    //worldWidth: 1000, 
+    //worldHeight: 1000,
+    interaction: app.renderer.plugins.interaction
+});
+
+app.stage.addChild(viewport);
 
 const trackQueue = new TrackQueue(trackContainer);
 trackQueue.add();
@@ -18,8 +27,13 @@ trackQueue.add();
 
 const car = PIXI.Sprite.from('res/car.png');
 trackContainer.addChild(car);
-var step = 0;
 
+viewport
+    .wheel()
+    .follow(car, {speed:4});
+viewport.addChild(trackContainer);
+
+var step = 0;
 app.ticker.add(() => {
     const curve = trackQueue.current.curve;
     const position = curve.point(step);
