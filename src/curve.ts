@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import Bezier from 'bezier-js';
+import {Point} from './point';
 
 export class Curve {
     public transform: PIXI.Matrix;
@@ -11,7 +12,7 @@ export class Curve {
 
     public constructor(transform: PIXI.Matrix, angle: number, handle: PIXI.Point) {
         this.nSteps = 6;
-        this.width = 20;
+        this.width = 50;
 
         const srcHandle = transform.clone()
                             .append(PIXI.Matrix.IDENTITY.rotate(Math.PI))
@@ -22,7 +23,7 @@ export class Curve {
         nextTransform.rotate(angle);
         transform.append(nextTransform);
 
-        this._handle  = new PIXI.Point(-0.6 +   Math.random() * 1.2 , -0.5);
+        this._handle  = new PIXI.Point(-0.6 + Math.random() * 1.2 , -0.5);
         const trgHandle = transform.apply(this._handle);
         const target  = transform.apply(new PIXI.Point(0, 0));
         const source = transform.apply(new PIXI.Point(0, -1));
@@ -36,23 +37,33 @@ export class Curve {
         const container = new PIXI.Container();
 
         const background = Curve.genBackground(this._curve);
-        container.addChild(background);
+        //container.addChild(background);
 
         const mask = Curve.genMask(this._curve, this.width, this.nSteps);
         container.addChild(mask);
-        background.mask = mask;
+        //background.mask = mask;
 
         //container.addChild(Curve.genDbgGraphics(curve, this.width, this.nSteps));
 
         this._container = container;
     }
 
-    public point(at: number) { 
+    public point(at: number) : Point {
+        const position = this._curve.get(at);
         const dv = this._curve.derivative(at);
         const rotation = Math.PI + Math.atan2(dv.y, dv.x);
-        const position = this._curve.get(at);
 
-        return [position.x, position.y, rotation]; 
+        return new Point(position.x, position.y, rotation, at);
+    }
+
+    public project(at: Point) : Point {
+        const pt = this._curve.project(at);
+        const t = pt.t ? pt.t : 0.0;
+        var dv = this._curve.derivative(t);
+        dv = dv ? dv : new Point(0, 0, 0, 0);
+        const rotation = Math.PI + Math.atan2(dv.y, dv.x);
+
+        return new Point(pt.x, pt.y, rotation, t);
     }
 
     public get handle() { return this._handle; }
