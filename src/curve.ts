@@ -11,7 +11,7 @@ export class Curve {
     private _curve: Bezier;
 
     public constructor(transform: PIXI.Matrix, angle: number, handle: PIXI.Point) {
-        this.nSteps = 6;
+        this.nSteps = 13;
         this.width = 50;
 
         const srcHandle = transform.clone()

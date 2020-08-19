@@ -17,7 +17,6 @@ const bgContainer = new PIXI.Container();
 bgContainer.x = app.screen.width/2;
 bgContainer.y = app.screen.height/2;
 
-
 const viewport = new Viewport( {
     screenWidth: window.innerWidth, 
     screenHeight: window.innerHeight, 
