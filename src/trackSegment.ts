@@ -21,7 +21,7 @@ export class TrackSegment {
     }
 
     public point(): Point {
-        this._step += 0.02;
+        this._step += 0.005;
         return this._curve.point(this._step);
     }
 

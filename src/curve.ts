@@ -12,7 +12,7 @@ export class Curve {
 
     public constructor(transform: PIXI.Matrix, angle: number, handle: PIXI.Point) {
         this.nSteps = 13;
-        this.width = 50;
+        this.width = 60;
 
         const srcHandle = transform.clone()
                             .append(PIXI.Matrix.IDENTITY.rotate(Math.PI))

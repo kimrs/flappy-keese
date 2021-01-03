@@ -6,6 +6,9 @@ export class FollowTrackUpdateStrategy implements IUpdateStrategy {
 
     constructor(private trackQueue: TrackQueue) { }
 
+    setAcceleration(acceleration: number): void {
+    }
+
     public update(): Point {
         return this.trackQueue.current.point();
     }
