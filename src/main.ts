@@ -53,7 +53,7 @@ function onClick() {
     }
     if(gameRunning)
     {
-        bird.updateStrategy = new BounceUpdateStrategy(trackQueue, bird.container.y, hitCallback);
+        bird.updateStrategy = new BounceUpdateStrategy(trackQueue, bird.container.position, hitCallback);
     }
 }
 

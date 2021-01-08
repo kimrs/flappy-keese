@@ -54,6 +54,6 @@ export class TrackQueue {
     }
 
     public follow() {
-        return this.current.point();
+        return this.current.step(0.005);
     }
 }

@@ -20,8 +20,13 @@ export class TrackSegment {
         this._step = 0;
     }
 
-    public point(): Point {
-        this._step += 0.005;
+    public step(delta:number): Point {
+        this._step += delta;
+        return this._curve.point(this._step);
+    }
+
+    public to(delta:number): Point {
+        this._step = delta;
         return this._curve.point(this._step);
     }
 

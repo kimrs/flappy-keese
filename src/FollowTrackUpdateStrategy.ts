@@ -10,6 +10,6 @@ export class FollowTrackUpdateStrategy implements IUpdateStrategy {
     }
 
     public update(): Point {
-        return this.trackQueue.current.point();
+        return this.trackQueue.current.step(0.005);
     }
 }
