@@ -52,8 +52,4 @@ export class TrackQueue {
         while(this.distanceToTail() > DISTANCE_TO_ENDS)
             this._remove();
     }
-
-    public follow() {
-        return this.current.step(0.005);
-    }
 }

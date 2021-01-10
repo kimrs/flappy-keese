@@ -4,7 +4,7 @@ import { Point } from "./point";
 import { IPoint } from "pixi.js";
 
 export class BounceUpdateStrategy implements IUpdateStrategy {
-    private fall: number = -3;
+    private fall: number = -5;
     private acceleration: number = 0.15;
     constructor(private trackQueue: TrackQueue, private playerPos:IPoint, private hitDetection:()=>void) {}
 
@@ -20,7 +20,7 @@ export class BounceUpdateStrategy implements IUpdateStrategy {
         this.trackQueue.current.to(t);
         const pos = new Point(this.playerPos.x, this.playerPos.y, 0, t); 
 
-        if(closestToPlayer.distance(pos) > 50 && t < 1)  
+        if(closestToPlayer.distance(pos) > 120 && t < 1)  
             this.hitDetection();
 
         return pos;

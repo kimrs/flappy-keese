@@ -12,7 +12,7 @@ export class Curve {
 
     public constructor(transform: PIXI.Matrix, angle: number, handle: PIXI.Point) {
         this.nSteps = 13;
-        this.width = 60;
+        this.width = 120;
 
         const srcHandle = transform.clone()
                             .append(PIXI.Matrix.IDENTITY.rotate(Math.PI))
@@ -23,7 +23,7 @@ export class Curve {
         nextTransform.rotate(angle);
         transform.append(nextTransform);
 
-        this._handle  = new PIXI.Point(-0.6 + Math.random() * 1.2 , -0.5);
+        this._handle  = new PIXI.Point(-0.6 + Math.random() * 1.6 , -0.6);
         const trgHandle = transform.apply(this._handle);
         const target  = transform.apply(new PIXI.Point(0, 0));
         const source = transform.apply(new PIXI.Point(0, -1));
@@ -85,7 +85,7 @@ export class Curve {
         const vertices = Curve.toVertices(curve, width, nSteps);
         const mask = new PIXI.Graphics();
         mask.lineStyle(1);
-        mask.beginFill(0xFF0000, 0.6);
+        mask.beginFill(0x545499, 0.6);
         mask.drawPolygon(vertices);
         mask.endFill();
 
