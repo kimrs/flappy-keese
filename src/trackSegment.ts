@@ -1,5 +1,5 @@
 import { Curve } from './curve';
-import { Point as PixiPoint, Matrix } from 'pixi.js';
+import { Point as PixiPoint, Matrix, Texture } from 'pixi.js';
 import { Point } from './point';
 
 export class TrackSegment {
@@ -18,6 +18,7 @@ export class TrackSegment {
 
         this._curve = new Curve(transform, rotation, handle);
         this._step = 0;
+
     }
 
     public step(delta:number): Point {

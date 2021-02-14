@@ -2,8 +2,8 @@ import * as PIXI from 'pixi.js';
 import { Viewport } from 'pixi-viewport'
 import { TrackQueue } from './trackQueue';
 import { Bird } from './bird';
-import { FollowTrackUpdateStrategy } from './FollowTrackUpdateStrategy'
-import { BounceUpdateStrategy } from './BounceUpdateStrategy';
+import { FollowTrackUpdateStrategy } from './UpdateStrategy/FollowTrackUpdateStrategy'
+import { BounceUpdateStrategy } from './UpdateStrategy/BounceUpdateStrategy';
 
 let gameRunning = false;
 
