@@ -1,5 +1,6 @@
 import { Container, Matrix} from 'pixi.js';
 import { TrackSegment } from './trackSegment';
+import { Cave } from './cave';
 
 const DISTANCE_TO_ENDS = 2000;
  
@@ -8,6 +9,7 @@ export class TrackQueue {
     private _head: TrackSegment;
     private _tail: TrackSegment;
     private _container: Container;
+    private _cave: Cave;
 
     public constructor() {
         let transform = new Matrix(); 
@@ -20,6 +22,8 @@ export class TrackQueue {
         let container = new Container();
         container.addChild(this._currentSegment.curve.container);
         this._container = container;
+        this._cave = new Cave();
+        container.addChild(this._cave.container);
     }
 
     public get container() { return this._container; }
@@ -40,6 +44,8 @@ export class TrackQueue {
         this._head.next = next;
         this._head = next;
         this._container.addChild(next.curve.container);
+        const point = next.curve.point(0.5);
+        this._cave.Add(next.curve.transform);
     }
 
     private _remove() {

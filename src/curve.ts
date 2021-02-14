@@ -18,9 +18,9 @@ export class Curve {
                             .append(PIXI.Matrix.IDENTITY.rotate(Math.PI))
                             .apply(handle);
         
-        const nextTransform = new PIXI.Matrix();
-        nextTransform.translate(0, 1);
-        nextTransform.rotate(angle);
+        const nextTransform = new PIXI.Matrix()
+            .translate(0, 1)
+            .rotate(angle);
         transform.append(nextTransform);
 
         this._handle  = new PIXI.Point(-0.6 + Math.random() * 1.6 , -0.6);

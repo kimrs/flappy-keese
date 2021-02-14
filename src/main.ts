@@ -24,7 +24,8 @@ bgContainer.addChild(trackQueue.container);
 const bird = new Bird(new FollowTrackUpdateStrategy(trackQueue));
 trackQueue.container.addChild(bird.container);
 trackQueue.update();
-viewport.zoomPercent(0.0)
+viewport.zoomPercent(0.00)
+    .wheel()
     .follow(bird.container, {radius: 0, speed: 0, acceleration: 0});
 app.renderer.resize(window.innerWidth, window.innerHeight);
 viewport.addChild(bgContainer);
