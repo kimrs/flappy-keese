@@ -15,18 +15,14 @@ const viewport = new Viewport( {
     screenHeight: app.screen.height, 
     interaction: app.renderer.plugins.interaction
 });
-
 app.stage.addChild(viewport);
 
 const bgContainer = new PIXI.Container();
-const fgContainer = new PIXI.Container();
-const trackContainer = new PIXI.Container();
-bgContainer.addChild(trackContainer);
-const trackQueue = new TrackQueue(trackContainer);
+const trackQueue = new TrackQueue();
+bgContainer.addChild(trackQueue.container);
 
-app.stage.addChild(fgContainer);
-
-const bird = new Bird(trackContainer, new FollowTrackUpdateStrategy(trackQueue));
+const bird = new Bird(new FollowTrackUpdateStrategy(trackQueue));
+trackQueue.container.addChild(bird.container);
 trackQueue.update();
 viewport.zoomPercent(0.0)
     .follow(bird.container, {radius: 0, speed: 0, acceleration: 0});
@@ -38,7 +34,7 @@ app.ticker.add(() => {
     if(step >= 1) {
         trackQueue.toNext();
         trackQueue.update();
-        trackContainer.swapChildren(bird.container, trackQueue.next.curve.container);
+        trackQueue.container.swapChildren(bird.container, trackQueue.next.curve.container);
     }
 });
 

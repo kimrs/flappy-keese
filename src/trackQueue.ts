@@ -9,7 +9,7 @@ export class TrackQueue {
     private _tail: TrackSegment;
     private _container: Container;
 
-    public constructor(container: Container) {
+    public constructor() {
         let transform = new Matrix(); 
         transform.translate(0, 1);
         transform.scale(100, 100); 
@@ -17,10 +17,12 @@ export class TrackQueue {
         this._tail = new TrackSegment(Math.PI/2, null);
         this._head = this._tail;
         this._currentSegment = this._tail;
+        let container = new Container();
         container.addChild(this._currentSegment.curve.container);
         this._container = container;
     }
 
+    public get container() { return this._container; }
     public get current() { return this._currentSegment; }
     public get next() { return this._currentSegment.next; }
 

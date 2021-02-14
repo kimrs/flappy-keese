@@ -18,7 +18,6 @@ export class TrackSegment {
 
         this._curve = new Curve(transform, rotation, handle);
         this._step = 0;
-
     }
 
     public step(delta:number): Point {
@@ -35,16 +34,15 @@ export class TrackSegment {
         return this._curve.project(point);
     }
 
-
     set next(value:TrackSegment) { 
         this._next = value; 
     }
 
     get next() {
-        if(this._next) 
-            return this._next;
-        else 
+        if(!this._next) 
             throw new Error("Next segment is not assigned");
+
+        return this._next;
     }
 
     get curve() { return this._curve; }
